@@ -1,6 +1,7 @@
-// got from part 1 and feb 18 tutorials
-// changed studentcard to applicationcard
-// card is now driven entirely by props from the parent
+// card is a preview of one application
+// tapping the company name opens the detail screen for more actions
+// plus one and minus one stay here because adjusting want level is a quick action
+import { useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
 
 type ApplicationCardProps = {
@@ -10,8 +11,6 @@ type ApplicationCardProps = {
   date: string;
   count: number;
   onUpdate: (id: number, delta: number) => void;
-  onRemove: (id: number) => void;
-  onEdit: (id: number) => void;
 };
 
 export default function ApplicationCard({
@@ -21,12 +20,24 @@ export default function ApplicationCard({
   date,
   count,
   onUpdate,
-  onRemove,
-  onEdit,
 }: ApplicationCardProps) {
+  const router = useRouter();
+
   return (
     <View style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
-      <Text style={{ fontSize: 18 }}>{company}</Text>
+      {/* tapping the company name opens the detail screen */}
+      <Text
+        style={{ fontSize: 18 }}
+        onPress={() =>
+          router.push({
+            pathname: "/application/[id]",
+            params: { id: id.toString() },
+          })
+        }
+      >
+        {company}
+      </Text>
+
       <Text>Category: {category}</Text>
       <Text>Date: {date}</Text>
 
@@ -41,15 +52,6 @@ export default function ApplicationCard({
         {count < 0 && "Negative"}
         {count === 0 && "Zero"}
       </Text>
-
-      {/* edit button tells the parent to load this application into the form */}
-      <View style={{ marginTop: 5 }}>
-        <Button title="Edit" onPress={() => onEdit(id)} />
-      </View>
-
-      <View style={{ marginTop: 5 }}>
-        <Button title="Remove" onPress={() => onRemove(id)} />
-      </View>
     </View>
   );
 }

@@ -1,24 +1,55 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+// got from 0304 tutorial step 1
+// changed student to application everywhere
+// moved the applications state out of indexscreen into global context
+// so every screen in the app can read and write the same data
+import { Stack } from "expo-router";
+import { createContext, useState } from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
+export type Application = {
+  id: number;
+  company: string;
+  category: string;
+  date: string;
+  count: number;
 };
 
+type ApplicationContextType = {
+  applications: Application[];
+  setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
+};
+
+export const ApplicationContext = createContext<ApplicationContextType | null>(
+  null,
+);
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [applications, setApplications] = useState<Application[]>([
+    {
+      id: 1,
+      company: "Google",
+      category: "Developer",
+      date: "2026-04-01",
+      count: 0,
+    },
+    {
+      id: 2,
+      company: "Meta",
+      category: "Analyst",
+      date: "2026-04-01",
+      count: 0,
+    },
+    {
+      id: 3,
+      company: "Stripe",
+      category: "Solutions Engineer",
+      date: "2026-04-02",
+      count: 0,
+    },
+  ]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ApplicationContext.Provider value={{ applications, setApplications }}>
+      <Stack />
+    </ApplicationContext.Provider>
   );
 }
