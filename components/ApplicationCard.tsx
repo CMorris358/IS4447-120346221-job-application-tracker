@@ -1,23 +1,27 @@
-// got from part 1 tutorial
+// got from part 1 and feb 18 tutorials
 // changed studentcard to applicationcard
-// name to company, major to category, year to date
-// added usestate for count (want level) with +1/-1 buttons
-import { useState } from "react";
+// name to company major to category year to date
+// count is no longer local state it comes from parent as a prop
+// onupdate callback tells parent when plus one or minus one was pressed
 import { Button, Text, View } from "react-native";
 
 type ApplicationCardProps = {
+  id: number;
   company: string;
   category: string;
   date: string;
+  count: number;
+  onUpdate: (id: number, delta: number) => void;
 };
 
 export default function ApplicationCard({
+  id,
   company,
   category,
   date,
+  count,
+  onUpdate,
 }: ApplicationCardProps) {
-  const [count, setCount] = useState(0);
-
   return (
     <View style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
       <Text style={{ fontSize: 18 }}>{company}</Text>
@@ -26,8 +30,8 @@ export default function ApplicationCard({
 
       <Text style={{ marginTop: 10 }}>Count: {count}</Text>
 
-      <Button title="+1" onPress={() => setCount(count + 1)} />
-      <Button title="-1" onPress={() => setCount(count - 1)} />
+      <Button title="+1" onPress={() => onUpdate(id, 1)} />
+      <Button title="-1" onPress={() => onUpdate(id, -1)} />
 
       <Text>
         {count > 0 && "Positive"}
