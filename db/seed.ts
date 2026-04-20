@@ -1,3 +1,7 @@
+// got from starter assignment code
+// changed tasks to applications and name to company
+// readded count as realised could be used for want level
+// swapped sample data to job applications
 import { db } from "./client";
 import { applications } from "./schema";
 
@@ -6,20 +10,13 @@ export async function seedApplicationsIfEmpty() {
   if (existing.length > 0) return;
 
   await db.insert(applications).values([
+    { company: "Google", category: "Developer", date: "2026-04-01", count: 8 },
+    { company: "Meta", category: "Analyst", date: "2026-04-01", count: 6 },
     {
-      name: "Google — Software Engineer",
-      category: "Full-time",
-      date: "2026-04-01",
-    },
-    {
-      name: "Meta — Frontend Intern",
-      category: "Internship",
-      date: "2026-04-01",
-    },
-    {
-      name: "Stripe — Backend Engineer",
-      category: "Full-time",
+      company: "Stripe",
+      category: "Solutions Engineer",
       date: "2026-04-02",
+      count: 9,
     },
   ]);
 }
