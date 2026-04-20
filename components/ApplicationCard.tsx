@@ -11,6 +11,7 @@ type ApplicationCardProps = {
   count: number;
   onUpdate: (id: number, delta: number) => void;
   onRemove: (id: number) => void;
+  onEdit: (id: number) => void;
 };
 
 export default function ApplicationCard({
@@ -21,6 +22,7 @@ export default function ApplicationCard({
   count,
   onUpdate,
   onRemove,
+  onEdit,
 }: ApplicationCardProps) {
   return (
     <View style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
@@ -39,6 +41,11 @@ export default function ApplicationCard({
         {count < 0 && "Negative"}
         {count === 0 && "Zero"}
       </Text>
+
+      {/* edit button tells the parent to load this application into the form */}
+      <View style={{ marginTop: 5 }}>
+        <Button title="Edit" onPress={() => onEdit(id)} />
+      </View>
 
       <View style={{ marginTop: 5 }}>
         <Button title="Remove" onPress={() => onRemove(id)} />
