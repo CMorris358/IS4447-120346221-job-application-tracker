@@ -1,11 +1,9 @@
 // got from part 1 and feb 18 tutorials
 // changed studentcard to applicationcard
 // lifted count state up from the card to the parent
-// added total calculated from the array not stored as state
-// added average want level per application using the same reduce pattern
 import ApplicationCard from "@/components/ApplicationCard";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 
 type Application = {
   id: number;
@@ -40,6 +38,7 @@ export default function IndexScreen() {
     },
   ]);
 
+  // updates one applications count by a delta
   const updateCount = (id: number, delta: number) => {
     setApplications((prev) =>
       prev.map((application) =>
@@ -47,6 +46,20 @@ export default function IndexScreen() {
           ? { ...application, count: application.count + delta }
           : application,
       ),
+    );
+  };
+
+  // resets every count back to zero
+  const resetAll = () => {
+    setApplications((prev) =>
+      prev.map((application) => ({ ...application, count: 0 })),
+    );
+  };
+
+  // removes an application by filtering it out of the array
+  const removeApplication = (id: number) => {
+    setApplications((prev) =>
+      prev.filter((application) => application.id !== id),
     );
   };
 
@@ -64,13 +77,20 @@ export default function IndexScreen() {
         Average Want Level: {average.toFixed(1)}
       </Text>
 
-      {applications.map((application) => (
-        <ApplicationCard
-          key={application.id}
-          {...application}
-          onUpdate={updateCount}
-        />
-      ))}
+      <Button title="Reset All" onPress={resetAll} />
+
+      {applications.length === 0 ? (
+        <Text style={{ marginTop: 20 }}>No applications yet.</Text>
+      ) : (
+        applications.map((application) => (
+          <ApplicationCard
+            key={application.id}
+            {...application}
+            onUpdate={updateCount}
+            onRemove={removeApplication}
+          />
+        ))
+      )}
     </View>
   );
 }

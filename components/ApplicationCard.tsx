@@ -1,8 +1,6 @@
 // got from part 1 and feb 18 tutorials
 // changed studentcard to applicationcard
-// name to company major to category year to date
-// count is no longer local state it comes from parent as a prop
-// onupdate callback tells parent when plus one or minus one was pressed
+// card is now driven entirely by props from the parent
 import { Button, Text, View } from "react-native";
 
 type ApplicationCardProps = {
@@ -12,6 +10,7 @@ type ApplicationCardProps = {
   date: string;
   count: number;
   onUpdate: (id: number, delta: number) => void;
+  onRemove: (id: number) => void;
 };
 
 export default function ApplicationCard({
@@ -21,6 +20,7 @@ export default function ApplicationCard({
   date,
   count,
   onUpdate,
+  onRemove,
 }: ApplicationCardProps) {
   return (
     <View style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
@@ -30,6 +30,7 @@ export default function ApplicationCard({
 
       <Text style={{ marginTop: 10 }}>Count: {count}</Text>
 
+      {/* plus one and minus one call back to the parent with the delta */}
       <Button title="+1" onPress={() => onUpdate(id, 1)} />
       <Button title="-1" onPress={() => onUpdate(id, -1)} />
 
@@ -38,6 +39,10 @@ export default function ApplicationCard({
         {count < 0 && "Negative"}
         {count === 0 && "Zero"}
       </Text>
+
+      <View style={{ marginTop: 5 }}>
+        <Button title="Remove" onPress={() => onRemove(id)} />
+      </View>
     </View>
   );
 }
