@@ -1,6 +1,9 @@
 // detail screen for one application
 // reads the id from the route params then finds that application in context
-// edit button navigates to the edit screen remove deletes and goes back
+// edit button navigates to the edit screen remove now deletes from the db
+import { db } from "@/db/client";
+import { applications as applicationsTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext } from "react";
 import { Button, Text, View } from "react-native";
@@ -24,9 +27,13 @@ export default function ApplicationDetail() {
   // guard in case the application was already removed or id is invalid
   if (!application) return null;
 
-  // removes this application and navigates back to the list
-  const removeApplication = () => {
-    setApplications(applications.filter((a) => a.id !== Number(id)));
+  // deletes this application from the db then reloads all rows into context
+  const removeApplication = async () => {
+    await db
+      .delete(applicationsTable)
+      .where(eq(applicationsTable.id, Number(id)));
+    const rows = await db.select().from(applicationsTable);
+    setApplications(rows);
     router.back();
   };
 

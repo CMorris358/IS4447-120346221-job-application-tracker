@@ -8,7 +8,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "generate": "drizzle-kit generate --config=db/drizzle.config.ts",
+    "push": "drizzle-kit push --config=db/drizzle.config.ts",
+    "studio": "drizzle-kit studio --config=db/drizzle.config.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -45,6 +48,7 @@
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
+    "better-sqlite3": "^12.9.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",

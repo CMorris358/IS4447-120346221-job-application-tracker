@@ -3,7 +3,11 @@
 // this screen handles the list plus derived totals and reset all
 // edit and remove moved to the detail screen
 // plus one and minus one stay on the card via onupdate
+// count updates and reset now write to the db and reload
 import ApplicationCard from "@/components/ApplicationCard";
+import { db } from "@/db/client";
+import { applications as applicationsTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
 import { Button, ScrollView, Text } from "react-native";
@@ -19,22 +23,26 @@ export default function IndexScreen() {
 
   const { applications, setApplications } = context;
 
-  // updates one applications count by a delta
-  const updateCount = (id: number, delta: number) => {
-    setApplications((prev) =>
-      prev.map((application) =>
-        application.id === id
-          ? { ...application, count: application.count + delta }
-          : application,
-      ),
-    );
+  // updates the count for one application in the db then reloads all rows
+  const updateCount = async (id: number, delta: number) => {
+    const current = applications.find((a) => a.id === id);
+    if (!current) return;
+
+    await db
+      .update(applicationsTable)
+      .set({ count: current.count + delta })
+      .where(eq(applicationsTable.id, id));
+
+    const rows = await db.select().from(applicationsTable);
+    setApplications(rows);
   };
 
-  // resets every count back to zero
-  const resetAll = () => {
-    setApplications((prev) =>
-      prev.map((application) => ({ ...application, count: 0 })),
-    );
+  // resets every applications count back to zero in the db then reloads
+  const resetAll = async () => {
+    await db.update(applicationsTable).set({ count: 0 });
+
+    const rows = await db.select().from(applicationsTable);
+    setApplications(rows);
   };
 
   // derived values not stored in state

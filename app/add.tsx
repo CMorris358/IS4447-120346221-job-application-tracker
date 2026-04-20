@@ -1,5 +1,7 @@
 // form for adding a new application
-// reads and writes the shared applications list through context
+// inserts into the db then reloads the list into context
+import { db } from "@/db/client";
+import { applications as applicationsTable } from "@/db/schema";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import { Button, TextInput, View } from "react-native";
@@ -16,19 +18,19 @@ export default function AddApplication() {
 
   if (!context) return null;
 
-  const { applications, setApplications } = context;
+  const { setApplications } = context;
 
-  // builds a new application from the form and appends it to the array
-  const saveApplication = () => {
-    const newApplication = {
-      id: Date.now(),
+  // inserts the new application into the db then reloads all rows into context
+  const saveApplication = async () => {
+    await db.insert(applicationsTable).values({
       company,
       category,
       date,
       count: 0,
-    };
+    });
 
-    setApplications([...applications, newApplication]);
+    const rows = await db.select().from(applicationsTable);
+    setApplications(rows);
     router.back();
   };
 

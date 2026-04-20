@@ -1,5 +1,8 @@
 // edit screen for one application
-// loads the application by id pre-fills the form and updates on save
+// loads the application by id pre-fills the form and updates the db on save
+import { db } from "@/db/client";
+import { applications as applicationsTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import { Button, TextInput, View } from "react-native";
@@ -24,15 +27,17 @@ export default function EditApplication() {
   if (!context) return null;
   if (!application) return null;
 
-  const { applications, setApplications } = context;
+  const { setApplications } = context;
 
-  // walk through the array and replace the matching application with the new values
-  const saveChanges = () => {
-    setApplications(
-      applications.map((a) =>
-        a.id === Number(id) ? { ...a, company, category, date } : a,
-      ),
-    );
+  // updates the application in the db then reloads all rows into context
+  const saveChanges = async () => {
+    await db
+      .update(applicationsTable)
+      .set({ company, category, date })
+      .where(eq(applicationsTable.id, Number(id)));
+
+    const rows = await db.select().from(applicationsTable);
+    setApplications(rows);
     router.back();
   };
 

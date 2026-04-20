@@ -1,9 +1,10 @@
-// got from 0304 tutorial step 1
-// changed student to application everywhere
-// moved the applications state out of indexscreen into global context
-// so every screen in the app can read and write the same data
+// global state lives here and is now sourced from sqlite via drizzle
+// seeds the db on first launch then loads all rows into context
+import { db } from "@/db/client";
+import { applications as applicationsTable } from "@/db/schema";
+import { seedApplicationsIfEmpty } from "@/db/seed";
 import { Stack } from "expo-router";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export type Application = {
   id: number;
@@ -23,29 +24,18 @@ export const ApplicationContext = createContext<ApplicationContextType | null>(
 );
 
 export default function RootLayout() {
-  const [applications, setApplications] = useState<Application[]>([
-    {
-      id: 1,
-      company: "Google",
-      category: "Developer",
-      date: "2026-04-01",
-      count: 0,
-    },
-    {
-      id: 2,
-      company: "Meta",
-      category: "Analyst",
-      date: "2026-04-01",
-      count: 0,
-    },
-    {
-      id: 3,
-      company: "Stripe",
-      category: "Solutions Engineer",
-      date: "2026-04-02",
-      count: 0,
-    },
-  ]);
+  // empty array to start applications load from the db below
+  const [applications, setApplications] = useState<Application[]>([]);
+
+  // runs once on first mount seeds then loads rows into state
+  useEffect(() => {
+    const loadApplications = async () => {
+      await seedApplicationsIfEmpty();
+      const rows = await db.select().from(applicationsTable);
+      setApplications(rows);
+    };
+    loadApplications();
+  }, []);
 
   return (
     <ApplicationContext.Provider value={{ applications, setApplications }}>
