@@ -1,12 +1,17 @@
 // detail screen for one application
 // reads the id from the route params then finds that application in context
-// edit button navigates to the edit screen remove now deletes from the db
+// edit button navigates to the edit screen remove deletes and goes back
+// uses screenheader and infotag for consistency with the list screen
+import InfoTag from "@/components/ui/info-tag";
+import PrimaryButton from "@/components/ui/primary-button";
+import ScreenHeader from "@/components/ui/screen-header";
 import { db } from "@/db/client";
 import { applications as applicationsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext } from "react";
-import { Button, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Application, ApplicationContext } from "../_layout";
 
 export default function ApplicationDetail() {
@@ -32,31 +37,64 @@ export default function ApplicationDetail() {
     await db
       .delete(applicationsTable)
       .where(eq(applicationsTable.id, Number(id)));
+
     const rows = await db.select().from(applicationsTable);
     setApplications(rows);
     router.back();
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 22 }}>{application.company}</Text>
-      <Text>Category: {application.category}</Text>
-      <Text>Date: {application.date}</Text>
-      <Text>Count: {application.count}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <ScreenHeader
+          title={application.company}
+          subtitle="Application details"
+        />
 
-      <Button
-        title="Edit"
-        onPress={() =>
-          router.push({
-            pathname: "/application/[id]/edit",
-            params: { id },
-          })
-        }
-      />
+        <View style={styles.tags}>
+          <InfoTag label="Category" value={application.category} />
+          <InfoTag label="Date" value={application.date} />
+          <InfoTag label="Count" value={String(application.count)} />
+        </View>
 
-      <Button title="Remove" onPress={removeApplication} />
+        <PrimaryButton
+          label="Edit"
+          onPress={() =>
+            router.push({
+              pathname: "/application/[id]/edit",
+              params: { id },
+            })
+          }
+        />
 
-      <Button title="Back" onPress={() => router.back()} />
-    </View>
+        <View style={styles.buttonSpacing}>
+          <PrimaryButton
+            label="Delete"
+            variant="secondary"
+            onPress={removeApplication}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#F8FAFC",
+    flex: 1,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+  },
+  content: {
+    paddingBottom: 24,
+  },
+  tags: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 16,
+  },
+  buttonSpacing: {
+    marginTop: 10,
+  },
+});

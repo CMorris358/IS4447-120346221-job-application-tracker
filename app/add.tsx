@@ -1,10 +1,15 @@
 // form for adding a new application
+// uses reusable formfield and primarybutton components
 // inserts into the db then reloads the list into context
+import FormField from "@/components/ui/form-field";
+import PrimaryButton from "@/components/ui/primary-button";
+import ScreenHeader from "@/components/ui/screen-header";
 import { db } from "@/db/client";
 import { applications as applicationsTable } from "@/db/schema";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
-import { Button, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationContext } from "./_layout";
 
 export default function AddApplication() {
@@ -35,29 +40,56 @@ export default function AddApplication() {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <TextInput
-        placeholder="Company"
-        value={company}
-        onChangeText={setCompany}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 5 }}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <ScreenHeader
+          title="Add Application"
+          subtitle="Create a new job application"
+        />
 
-      <TextInput
-        placeholder="Category"
-        value={category}
-        onChangeText={setCategory}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 5 }}
-      />
+        <View style={styles.form}>
+          <FormField
+            label="Company"
+            value={company}
+            onChangeText={setCompany}
+          />
+          <FormField
+            label="Category"
+            value={category}
+            onChangeText={setCategory}
+          />
+          <FormField label="Date" value={date} onChangeText={setDate} />
+        </View>
 
-      <TextInput
-        placeholder="Date"
-        value={date}
-        onChangeText={setDate}
-        style={{ borderWidth: 1, marginVertical: 5, padding: 5 }}
-      />
+        <PrimaryButton label="Save Application" onPress={saveApplication} />
 
-      <Button title="Save" onPress={saveApplication} />
-    </View>
+        <View style={styles.cancelSpacing}>
+          <PrimaryButton
+            label="Cancel"
+            variant="secondary"
+            onPress={() => router.back()}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#F8FAFC",
+    flex: 1,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+  },
+  content: {
+    paddingBottom: 24,
+    paddingTop: 14,
+  },
+  form: {
+    marginTop: 8,
+  },
+  cancelSpacing: {
+    marginTop: 10,
+  },
+});

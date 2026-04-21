@@ -1,8 +1,11 @@
 // card is a preview of one application
 // tapping the company name opens the detail screen for more actions
 // plus one and minus one stay here because adjusting want level is a quick action
+// accessibility labels added to every interactive element
+// now uses infotag for category and date
+import InfoTag from "@/components/ui/info-tag";
 import { useRouter } from "expo-router";
-import { Button, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 
 type ApplicationCardProps = {
   id: number;
@@ -23,31 +26,44 @@ export default function ApplicationCard({
 }: ApplicationCardProps) {
   const router = useRouter();
 
+  // short summary used as the accessibility label for the company name
+  const applicationSummary = `${company}, ${category}, ${date}`;
+
   return (
-    <View style={{ marginBottom: 12, padding: 10, borderWidth: 1 }}>
-      {/* tapping the company name opens the detail screen */}
-      <Text
-        style={{ fontSize: 18 }}
+    <View style={styles.card}>
+      <Pressable
+        accessibilityLabel={`${applicationSummary}, view details`}
+        accessibilityRole="button"
         onPress={() =>
           router.push({
             pathname: "/application/[id]",
             params: { id: id.toString() },
           })
         }
+        style={({ pressed }) => [pressed ? styles.pressed : null]}
       >
-        {company}
-      </Text>
+        <Text style={styles.company}>{company}</Text>
+      </Pressable>
 
-      <Text>Category: {category}</Text>
-      <Text>Date: {date}</Text>
+      <View style={styles.tags}>
+        <InfoTag label="Category" value={category} />
+        <InfoTag label="Date" value={date} />
+      </View>
 
-      <Text style={{ marginTop: 10 }}>Count: {count}</Text>
+      <Text style={styles.countText}>Count: {count}</Text>
 
-      {/* plus one and minus one call back to the parent with the delta */}
-      <Button title="+1" onPress={() => onUpdate(id, 1)} />
-      <Button title="-1" onPress={() => onUpdate(id, -1)} />
+      <Button
+        title="+1"
+        onPress={() => onUpdate(id, 1)}
+        accessibilityLabel={`Increase want level for ${company}`}
+      />
+      <Button
+        title="-1"
+        onPress={() => onUpdate(id, -1)}
+        accessibilityLabel={`Decrease want level for ${company}`}
+      />
 
-      <Text>
+      <Text style={styles.status}>
         {count > 0 && "Positive"}
         {count < 0 && "Negative"}
         {count === 0 && "Zero"}
@@ -55,3 +71,33 @@ export default function ApplicationCard({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#E5E7EB",
+    borderRadius: 14,
+    borderWidth: 1,
+    marginBottom: 12,
+    padding: 14,
+  },
+  pressed: {
+    opacity: 0.88,
+  },
+  company: {
+    color: "#111827",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  tags: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+  },
+  countText: {
+    marginTop: 10,
+  },
+  status: {
+    marginTop: 4,
+  },
+});
