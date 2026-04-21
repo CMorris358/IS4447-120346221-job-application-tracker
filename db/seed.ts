@@ -6,7 +6,13 @@
 // added seed for categories with colours matching existing application category names
 // added seed for users so there is a default account to log in with
 import { db } from "./client";
-import { applications, categories, targets, users } from "./schema";
+import {
+  applications,
+  applicationStatusLogs,
+  categories,
+  targets,
+  users,
+} from "./schema";
 
 export async function seedApplicationsIfEmpty() {
   const existing = await db.select().from(applications);
@@ -31,6 +37,19 @@ export async function seedTargetsIfEmpty() {
   await db.insert(targets).values([
     { name: "Weekly goal", period: "weekly", targetCount: 5 },
     { name: "Monthly goal", period: "monthly", targetCount: 20 },
+  ]);
+}
+
+export async function seedStatusLogsIfEmpty() {
+  const existing = await db.select().from(applicationStatusLogs);
+  if (existing.length > 0) return;
+
+  // seed one log for each application
+  await db.insert(applicationStatusLogs).values([
+    { applicationId: 1, status: "Applied", date: "2026-04-01" },
+    { applicationId: 1, status: "Interviewing", date: "2026-04-05" },
+    { applicationId: 2, status: "Applied", date: "2026-04-01" },
+    { applicationId: 3, status: "Applied", date: "2026-04-02" },
   ]);
 }
 

@@ -43,4 +43,13 @@ sqlite.execSync(`
   );
 `);
 
+sqlite.execSync(`
+  CREATE TABLE IF NOT EXISTS application_status_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    application_id INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    date TEXT NOT NULL
+  );
+`);
+
 export const db = drizzle(sqlite);

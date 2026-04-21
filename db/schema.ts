@@ -32,3 +32,12 @@ export const users = sqliteTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
+
+// added status logs table to track application history over time
+// each log links to an application and records what status it had on a date
+export const applicationStatusLogs = sqliteTable("application_status_logs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  applicationId: integer("application_id").notNull(),
+  status: text("status").notNull(),
+  date: text("date").notNull(),
+});

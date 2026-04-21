@@ -1,16 +1,18 @@
 // global state lives here and is sourced from sqlite via drizzle
 // seeds the db on first launch then loads all rows into context
-// targets and categories added alongside applications all live in this provider
+// targets categories and status logs all live in this provider
 // login user state added so auth can be checked across the app
 import { db } from "@/db/client";
 import {
   applications as applicationsTable,
   categories as categoriesTable,
+  applicationStatusLogs as statusLogsTable,
   targets as targetsTable,
 } from "@/db/schema";
 import {
   seedApplicationsIfEmpty,
   seedCategoriesIfEmpty,
+  seedStatusLogsIfEmpty,
   seedTargetsIfEmpty,
   seedUsersIfEmpty,
 } from "@/db/seed";
@@ -45,6 +47,14 @@ export type Category = {
   colour: string;
 };
 
+// status log tracks history of an application over time
+export type StatusLog = {
+  id: number;
+  applicationId: number;
+  status: string;
+  date: string;
+};
+
 type ApplicationContextType = {
   applications: Application[];
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
@@ -52,6 +62,8 @@ type ApplicationContextType = {
   setTargets: React.Dispatch<React.SetStateAction<Target[]>>;
   categories: Category[];
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  statusLogs: StatusLog[];
+  setStatusLogs: React.Dispatch<React.SetStateAction<StatusLog[]>>;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
@@ -61,10 +73,11 @@ export const ApplicationContext = createContext<ApplicationContextType | null>(
 );
 
 export default function RootLayout() {
-  // empty arrays to start all three load from the db below
+  // empty arrays to start all tables load from the db below
   const [applications, setApplications] = useState<Application[]>([]);
   const [targets, setTargets] = useState<Target[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [statusLogs, setStatusLogs] = useState<StatusLog[]>([]);
   // null means not logged in yet
   const [user, setUser] = useState<User | null>(null);
 
@@ -75,12 +88,15 @@ export default function RootLayout() {
       await seedTargetsIfEmpty();
       await seedCategoriesIfEmpty();
       await seedUsersIfEmpty();
+      await seedStatusLogsIfEmpty();
       const applicationRows = await db.select().from(applicationsTable);
       const targetRows = await db.select().from(targetsTable);
       const categoryRows = await db.select().from(categoriesTable);
+      const statusLogRows = await db.select().from(statusLogsTable);
       setApplications(applicationRows);
       setTargets(targetRows);
       setCategories(categoryRows);
+      setStatusLogs(statusLogRows);
     };
     loadAll();
   }, []);
@@ -96,6 +112,8 @@ export default function RootLayout() {
           setTargets,
           categories,
           setCategories,
+          statusLogs,
+          setStatusLogs,
           user,
           setUser,
         }}
@@ -118,6 +136,8 @@ export default function RootLayout() {
         setTargets,
         categories,
         setCategories,
+        statusLogs,
+        setStatusLogs,
         user,
         setUser,
       }}
