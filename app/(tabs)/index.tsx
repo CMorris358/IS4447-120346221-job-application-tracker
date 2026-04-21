@@ -1,11 +1,12 @@
 // list screen shows the full applications list plus totals and reset
-// now supports search by company text and filter by category
+// supports search by company text and filter by category
 // header and filter chips use reusable components
 // count updates and reset write to the db and reload
+// added logout and delete profile for login requirement
 import ApplicationCard from "@/components/ApplicationCard";
 import ScreenHeader from "@/components/ui/screen-header";
 import { db } from "@/db/client";
-import { applications as applicationsTable } from "@/db/schema";
+import { applications as applicationsTable, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
@@ -30,7 +31,7 @@ export default function IndexScreen() {
   // guard in case the context is not ready yet
   if (!context) return null;
 
-  const { applications, setApplications } = context;
+  const { applications, setApplications, user, setUser } = context;
 
   // updates the count for one application in the db then reloads all rows
   const updateCount = async (id: number, delta: number) => {
@@ -44,6 +45,20 @@ export default function IndexScreen() {
 
     const rows = await db.select().from(applicationsTable);
     setApplications(rows);
+  };
+
+  // clears the logged in user and sends back to login screen
+  const logout = () => {
+    setUser(null);
+    router.replace("../login");
+  };
+
+  // removes the current user from the db then logs out
+  const deleteProfile = async () => {
+    if (!user) return;
+    await db.delete(users).where(eq(users.id, user.id));
+    setUser(null);
+    router.replace("../login");
   };
 
   // resets every applications count back to zero in the db then reloads
@@ -112,7 +127,19 @@ export default function IndexScreen() {
           onPress={() => router.push({ pathname: "/categories" })}
         />
 
+        {/* takes user to insights screen */}
+        <Button
+          title="Insights"
+          onPress={() => router.push({ pathname: "/insights" })}
+        />
+
         <Button title="Reset All" onPress={resetAll} />
+
+        {/* logs the current user out and returns to login */}
+        <Button title="Logout" onPress={logout} />
+
+        {/* deletes the current users profile from the db then logs out */}
+        <Button title="Delete Profile" color="red" onPress={deleteProfile} />
 
         <TextInput
           value={searchQuery}

@@ -3,6 +3,7 @@
 // readded count as realised could be used for want level
 // added targets table for weekly and monthly goals
 // added categories table for visual tagging
+// added users table for login system
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { openDatabaseSync } from "expo-sqlite";
 
@@ -31,6 +32,14 @@ sqlite.execSync(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     colour TEXT NOT NULL
+  );
+`);
+
+sqlite.execSync(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
   );
 `);
 

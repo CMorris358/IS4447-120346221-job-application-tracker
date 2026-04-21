@@ -4,8 +4,9 @@
 // swapped sample data to job applications with april 2026 dates
 // added seed for targets so fresh installs have something to demo
 // added seed for categories with colours matching existing application category names
+// added seed for users so there is a default account to log in with
 import { db } from "./client";
-import { applications, categories, targets } from "./schema";
+import { applications, categories, targets, users } from "./schema";
 
 export async function seedApplicationsIfEmpty() {
   const existing = await db.select().from(applications);
@@ -43,4 +44,11 @@ export async function seedCategoriesIfEmpty() {
     { name: "Solutions Engineer", colour: "#F59E0B" },
     { name: "Sales", colour: "#EF4444" },
   ]);
+}
+
+export async function seedUsersIfEmpty() {
+  const existing = await db.select().from(users);
+  if (existing.length > 0) return;
+
+  await db.insert(users).values([{ username: "demo", password: "demo" }]);
 }
