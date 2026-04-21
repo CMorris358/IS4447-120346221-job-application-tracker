@@ -11,7 +11,8 @@
     "lint": "expo lint",
     "generate": "drizzle-kit generate --config=db/drizzle.config.ts",
     "push": "drizzle-kit push --config=db/drizzle.config.ts",
-    "studio": "drizzle-kit studio --config=db/drizzle.config.ts"
+    "studio": "drizzle-kit studio --config=db/drizzle.config.ts",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -52,7 +53,7 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "jest": "^30.3.0",
+    "jest": "^29.7.0",
     "jest-expo": "^55.0.16",
     "react-test-renderer": "^19.1.0",
     "typescript": "~5.9.2"
