@@ -3,9 +3,14 @@
 // plus one and minus one stay here because adjusting want level is a quick action
 // accessibility labels added to every interactive element
 // now uses infotag for category and date
+// added category colour by matching application category to categories table
 import InfoTag from "@/components/ui/info-tag";
 import { useRouter } from "expo-router";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+
+// pulling categories from context so i can match category name to colour
+import { ApplicationContext } from "@/app/_layout";
+import { useContext } from "react";
 
 type ApplicationCardProps = {
   id: number;
@@ -25,6 +30,15 @@ export default function ApplicationCard({
   onUpdate,
 }: ApplicationCardProps) {
   const router = useRouter();
+
+  // getting categories from global state
+  const context = useContext(ApplicationContext);
+  if (!context) return null;
+
+  const { categories } = context;
+
+  // finding matching category so i can use its colour
+  const categoryMatch = categories.find((c) => c.name === category);
 
   // short summary used as the accessibility label for the company name
   const applicationSummary = `${company}, ${category}, ${date}`;
@@ -46,7 +60,17 @@ export default function ApplicationCard({
       </Pressable>
 
       <View style={styles.tags}>
-        <InfoTag label="Category" value={category} />
+        {/* added coloured dot to show category visually */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={[
+              styles.dot,
+              { backgroundColor: categoryMatch?.colour || "#CBD5F5" },
+            ]}
+          />
+          <InfoTag label="Category" value={category} />
+        </View>
+
         <InfoTag label="Date" value={date} />
       </View>
 
@@ -93,6 +117,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 10,
+  },
+  // small dot to show category colour
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 999,
+    marginRight: 6,
   },
   countText: {
     marginTop: 10,

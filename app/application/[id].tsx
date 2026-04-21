@@ -22,7 +22,8 @@ export default function ApplicationDetail() {
   // guard in case context is not ready
   if (!context) return null;
 
-  const { applications, setApplications } = context;
+  // this wires in categories from context so we can match colour
+  const { applications, setApplications, categories } = context;
 
   // find the specific application by id
   const application = applications.find(
@@ -31,6 +32,9 @@ export default function ApplicationDetail() {
 
   // guard in case the application was already removed or id is invalid
   if (!application) return null;
+
+  // match category to get its colour (used for dot)
+  const categoryMatch = categories.find((c) => c.name === application.category);
 
   // deletes this application from the db then reloads all rows into context
   const removeApplication = async () => {
@@ -52,7 +56,20 @@ export default function ApplicationDetail() {
         />
 
         <View style={styles.tags}>
-          <InfoTag label="Category" value={application.category} />
+          {/* added small colour dot based on category table */}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                backgroundColor: categoryMatch?.colour || "#CBD5F5",
+                marginRight: 6,
+              }}
+            />
+            <InfoTag label="Category" value={application.category} />
+          </View>
+
           <InfoTag label="Date" value={application.date} />
           <InfoTag label="Count" value={String(application.count)} />
         </View>

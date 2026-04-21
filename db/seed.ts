@@ -1,10 +1,11 @@
 // got from starter assignment code
 // changed tasks to applications and name to company
 // readded count as realised could be used for want level
-// swapped sample data to job applications
+// swapped sample data to job applications with april 2026 dates
 // added seed for targets so fresh installs have something to demo
+// added seed for categories with colours matching existing application category names
 import { db } from "./client";
-import { applications, targets } from "./schema";
+import { applications, categories, targets } from "./schema";
 
 export async function seedApplicationsIfEmpty() {
   const existing = await db.select().from(applications);
@@ -29,5 +30,17 @@ export async function seedTargetsIfEmpty() {
   await db.insert(targets).values([
     { name: "Weekly goal", period: "weekly", targetCount: 5 },
     { name: "Monthly goal", period: "monthly", targetCount: 20 },
+  ]);
+}
+
+export async function seedCategoriesIfEmpty() {
+  const existing = await db.select().from(categories);
+  if (existing.length > 0) return;
+
+  await db.insert(categories).values([
+    { name: "Developer", colour: "#3B82F6" },
+    { name: "Analyst", colour: "#10B981" },
+    { name: "Solutions Engineer", colour: "#F59E0B" },
+    { name: "Sales", colour: "#EF4444" },
   ]);
 }

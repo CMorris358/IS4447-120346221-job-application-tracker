@@ -106,6 +106,12 @@ export default function IndexScreen() {
           onPress={() => router.push({ pathname: "/targets" })}
         />
 
+        {/* takes user to category screen */}
+        <Button
+          title="Categories"
+          onPress={() => router.push({ pathname: "/categories" })}
+        />
+
         <Button title="Reset All" onPress={resetAll} />
 
         <TextInput

@@ -2,6 +2,7 @@
 // changed tasks to applications and name to company
 // readded count as realised could be used for want level
 // added targets table for weekly and monthly goals
+// added categories table for visual tagging
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { openDatabaseSync } from "expo-sqlite";
 
@@ -22,6 +23,14 @@ sqlite.execSync(`
     name TEXT NOT NULL,
     period TEXT NOT NULL,
     target_count INTEGER NOT NULL
+  );
+`);
+
+sqlite.execSync(`
+  CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    colour TEXT NOT NULL
   );
 `);
 
