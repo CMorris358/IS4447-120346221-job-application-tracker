@@ -2,8 +2,9 @@
 // changed tasks to applications and name to company
 // readded count as realised could be used for want level
 // swapped sample data to job applications
+// added seed for targets so fresh installs have something to demo
 import { db } from "./client";
-import { applications } from "./schema";
+import { applications, targets } from "./schema";
 
 export async function seedApplicationsIfEmpty() {
   const existing = await db.select().from(applications);
@@ -18,5 +19,15 @@ export async function seedApplicationsIfEmpty() {
       date: "2026-04-02",
       count: 9,
     },
+  ]);
+}
+
+export async function seedTargetsIfEmpty() {
+  const existing = await db.select().from(targets);
+  if (existing.length > 0) return;
+
+  await db.insert(targets).values([
+    { name: "Weekly goal", period: "weekly", targetCount: 5 },
+    { name: "Monthly goal", period: "monthly", targetCount: 20 },
   ]);
 }

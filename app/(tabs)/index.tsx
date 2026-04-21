@@ -100,6 +100,12 @@ export default function IndexScreen() {
           onPress={() => router.push({ pathname: "../add" })}
         />
 
+        {/* takes user to the targets screen */}
+        <Button
+          title="Targets"
+          onPress={() => router.push({ pathname: "/targets" })}
+        />
+
         <Button title="Reset All" onPress={resetAll} />
 
         <TextInput
