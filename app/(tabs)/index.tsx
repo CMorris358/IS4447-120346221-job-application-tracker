@@ -3,6 +3,7 @@
 // header and filter chips use reusable components
 // count updates and reset write to the db and reload
 // added logout and delete profile for login requirement
+// simple theme toggle added using context state
 import ApplicationCard from "@/components/ApplicationCard";
 import ScreenHeader from "@/components/ui/screen-header";
 import { db } from "@/db/client";
@@ -28,12 +29,16 @@ export default function IndexScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // guard in case the context is not ready yet
   if (!context) return null;
 
-  const { applications, setApplications, user, setUser } = context;
+  const { applications, setApplications, user, setUser, theme, setTheme } =
+    context;
 
-  // updates the count for one application in the db then reloads all rows
+  // toggle between light and dark
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   const updateCount = async (id: number, delta: number) => {
     const current = applications.find((a) => a.id === id);
     if (!current) return;
@@ -47,13 +52,11 @@ export default function IndexScreen() {
     setApplications(rows);
   };
 
-  // clears the logged in user and sends back to login screen
   const logout = () => {
     setUser(null);
     router.replace("../login");
   };
 
-  // removes the current user from the db then logs out
   const deleteProfile = async () => {
     if (!user) return;
     await db.delete(users).where(eq(users.id, user.id));
@@ -61,28 +64,22 @@ export default function IndexScreen() {
     router.replace("../login");
   };
 
-  // resets every applications count back to zero in the db then reloads
   const resetAll = async () => {
     await db.update(applicationsTable).set({ count: 0 });
     const rows = await db.select().from(applicationsTable);
     setApplications(rows);
   };
 
-  // derived values not stored in state
   const total = applications.reduce((sum, a) => sum + a.count, 0);
   const average = applications.length > 0 ? total / applications.length : 0;
 
-  // lowercase trimmed query used for case insensitive matching below
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  // dynamic list of categories pulled from the current applications
-  // all first then each unique category from the data
   const categoryOptions = [
     "All",
     ...Array.from(new Set(applications.map((a: Application) => a.category))),
   ];
 
-  // filter pipeline runs both search and category filter on every render
   const filteredApplications = applications.filter(
     (application: Application) => {
       const matchesSearch =
@@ -98,7 +95,13 @@ export default function IndexScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView
+      style={[
+        styles.safeArea,
+        // change background based on theme
+        { backgroundColor: theme === "light" ? "#F8FAFC" : "#0F172A" },
+      ]}
+    >
       <ScrollView contentContainerStyle={styles.listContent}>
         <ScreenHeader
           title="Applications"
@@ -110,24 +113,24 @@ export default function IndexScreen() {
           Average Want Level: {average.toFixed(1)}
         </Text>
 
+        {/* theme toggle button */}
+        <Button title={`Theme: ${theme}`} onPress={toggleTheme} />
+
         <Button
           title="Add Application"
           onPress={() => router.push({ pathname: "../add" })}
         />
 
-        {/* takes user to the targets screen */}
         <Button
           title="Targets"
           onPress={() => router.push({ pathname: "/targets" })}
         />
 
-        {/* takes user to category screen */}
         <Button
           title="Categories"
           onPress={() => router.push({ pathname: "/categories" })}
         />
 
-        {/* takes user to insights screen */}
         <Button
           title="Insights"
           onPress={() => router.push({ pathname: "/insights" })}
@@ -135,10 +138,8 @@ export default function IndexScreen() {
 
         <Button title="Reset All" onPress={resetAll} />
 
-        {/* logs the current user out and returns to login */}
         <Button title="Logout" onPress={logout} />
 
-        {/* deletes the current users profile from the db then logs out */}
         <Button title="Delete Profile" color="red" onPress={deleteProfile} />
 
         <TextInput
@@ -198,7 +199,6 @@ export default function IndexScreen() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: "#F8FAFC",
     flex: 1,
     paddingHorizontal: 18,
     paddingTop: 10,

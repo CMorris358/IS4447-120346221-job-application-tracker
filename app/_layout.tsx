@@ -66,6 +66,10 @@ type ApplicationContextType = {
   setStatusLogs: React.Dispatch<React.SetStateAction<StatusLog[]>>;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+
+  // theme state added for light/dark toggle
+  theme: "light" | "dark";
+  setTheme: React.Dispatch<React.SetStateAction<"light" | "dark">>;
 };
 
 export const ApplicationContext = createContext<ApplicationContextType | null>(
@@ -80,6 +84,9 @@ export default function RootLayout() {
   const [statusLogs, setStatusLogs] = useState<StatusLog[]>([]);
   // null means not logged in yet
   const [user, setUser] = useState<User | null>(null);
+
+  // use state for theme toggle
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   // runs once on first mount seeds all tables then loads rows into state
   useEffect(() => {
@@ -101,7 +108,6 @@ export default function RootLayout() {
     loadAll();
   }, []);
 
-  // if no user is logged in show the auth stack instead of the main app
   if (!user) {
     return (
       <ApplicationContext.Provider
@@ -116,6 +122,8 @@ export default function RootLayout() {
           setStatusLogs,
           user,
           setUser,
+          theme,
+          setTheme,
         }}
       >
         <Stack screenOptions={{ headerShown: false }}>
@@ -126,7 +134,6 @@ export default function RootLayout() {
     );
   }
 
-  // logged in users see the full app
   return (
     <ApplicationContext.Provider
       value={{
@@ -140,6 +147,8 @@ export default function RootLayout() {
         setStatusLogs,
         user,
         setUser,
+        theme,
+        setTheme,
       }}
     >
       <Stack />
