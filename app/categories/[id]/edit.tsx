@@ -1,4 +1,6 @@
 // edit category screen lets user update name and colour or delete it
+// preset colours added so user can select instead of typing hex manually
+
 import FormField from "@/components/ui/form-field";
 import PrimaryButton from "@/components/ui/primary-button";
 import ScreenHeader from "@/components/ui/screen-header";
@@ -7,9 +9,23 @@ import { categories as categoriesTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationContext, Category } from "../../_layout";
+
+// preset colour options user can pick instead of typing hex
+const presetColours = [
+  "#3B82F6",
+  "#EF4444",
+  "#10B981",
+  "#F59E0B",
+  "#8B5CF6",
+  "#EC4899",
+  "#14B8A6",
+  "#F97316",
+  "#64748B",
+  "#000000",
+];
 
 export default function EditCategory() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -56,11 +72,27 @@ export default function EditCategory() {
 
         <View style={styles.form}>
           <FormField label="Name" value={name} onChangeText={setName} />
+
           <FormField
             label="Colour (hex)"
             value={colour}
             onChangeText={setColour}
           />
+
+          {/* preset colour picker */}
+          <View style={styles.colourRow}>
+            {presetColours.map((c) => (
+              <Pressable
+                key={c}
+                onPress={() => setColour(c)}
+                style={[
+                  styles.colourCircle,
+                  { backgroundColor: c },
+                  colour === c && styles.selectedColour,
+                ]}
+              />
+            ))}
+          </View>
         </View>
 
         <PrimaryButton label="Save Changes" onPress={saveChanges} />
@@ -93,5 +125,28 @@ const styles = StyleSheet.create({
   },
   deleteSpacing: {
     marginTop: 10,
+  },
+
+  // row of selectable colours
+  colourRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+    gap: 10,
+  },
+
+  // circular colour option
+  colourCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: "#E2E8F0",
+  },
+
+  // highlight selected colour
+  selectedColour: {
+    borderColor: "#0F172A",
+    borderWidth: 3,
   },
 });
