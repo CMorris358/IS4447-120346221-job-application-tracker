@@ -1,3 +1,7 @@
+// login screen
+// handles user login by checking username and password against local db
+// sets user in global context and routes into app on success
+
 import { db } from "@/db/client";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -9,35 +13,49 @@ import { ApplicationContext } from "./_layout";
 export default function LoginScreen() {
   const router = useRouter();
   const context = useContext(ApplicationContext);
+
+  // state for form inputs and error message
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // guard if context not ready yet
   if (!context) return null;
 
   const { setUser } = context;
 
+  // login function checks db for user and validates password
   const login = async () => {
     setError("");
+
+    // query users table for matching username
     const found = await db
       .select()
       .from(users)
       .where(eq(users.username, username))
       .limit(1);
 
+    // simple password check (no hashing just local validation)
     if (found.length === 0 || found[0].password !== password) {
       setError("Invalid username or password");
       return;
     }
 
+    // store logged in user in global context
     setUser(found[0]);
+
+    // navigate into main app after login
     router.replace("/(tabs)");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Job Tracker</Text>
+
+      {/* show error if login fails */}
       {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      {/* username input */}
       <TextInput
         placeholder="Username"
         value={username}
@@ -47,6 +65,8 @@ export default function LoginScreen() {
         autoCorrect={false}
         textContentType="username"
       />
+
+      {/* password input */}
       <TextInput
         placeholder="Password"
         value={password}
@@ -57,8 +77,13 @@ export default function LoginScreen() {
         autoCorrect={false}
         textContentType="password"
       />
+
+      {/* triggers login function */}
       <Button title="Login" onPress={login} />
+
       <View style={styles.spacer} />
+
+      {/* navigate to register screen */}
       <Button title="Register" onPress={() => router.push("/register")} />
     </View>
   );
