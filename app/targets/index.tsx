@@ -1,6 +1,8 @@
 // targets list screen shows every goal plus live progress from applications
 // progress is derived from the applications array not stored on the target
 // tapping add goes to the add screen tapping a target goes to its edit screen
+// 04/03 and 25/03 tutorial
+
 import PrimaryButton from "@/components/ui/primary-button";
 import ScreenHeader from "@/components/ui/screen-header";
 import { useRouter } from "expo-router";

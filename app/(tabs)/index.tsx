@@ -5,6 +5,7 @@
 // added logout and delete profile for login requirement
 // simple theme toggle added using context state
 // ui updated to separate header stats actions and list
+// tutorials 04/03 and 11/03 and 25/03
 
 import ApplicationCard from "@/components/ApplicationCard";
 import { db } from "@/db/client";

@@ -1,3 +1,4 @@
+// testing tutorial week 12
 // integration test for the list screen
 // wraps it in a fake context with one application
 // checks the card and add button appear
@@ -38,6 +39,7 @@ const mockApplication = {
   count: 0,
 };
 
+//pretending app has this data already
 describe("IndexScreen", () => {
   it("renders the application and the add button", async () => {
     const { getByText } = render(
@@ -51,7 +53,7 @@ describe("IndexScreen", () => {
           setCategories: jest.fn(),
           statusLogs: [],
           setStatusLogs: jest.fn(),
-          user: { id: 1, username: "user", password: "1234" }, // needed for login check
+          user: { id: 1, username: "demo", password: "demo" }, // needed for login check
           setUser: jest.fn(),
           theme: "light", // needed for theme logic
           setTheme: jest.fn(),

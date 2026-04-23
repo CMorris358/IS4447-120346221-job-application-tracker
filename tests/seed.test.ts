@@ -1,3 +1,4 @@
+// testing tutorial week 12
 // unit test for the seed function
 // we mock the db so no real sqlite touched
 // two scenarios table empty should insert and table has rows should not insert

@@ -1,5 +1,6 @@
 // add category screen saves a new category with a colour
 // preset colours added so user can select instead of typing hex manually
+// tutorial 18/02 and 11/03
 
 import FormField from "@/components/ui/form-field";
 import PrimaryButton from "@/components/ui/primary-button";

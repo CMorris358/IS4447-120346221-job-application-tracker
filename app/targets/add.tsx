@@ -1,6 +1,7 @@
 // add target screen creates a new target and saves to the db
 // period is chosen from two chips instead of a text input
 // target count is typed into a form field
+// tutorial 18/02 and 11/03
 import FormField from "@/components/ui/form-field";
 import PrimaryButton from "@/components/ui/primary-button";
 import ScreenHeader from "@/components/ui/screen-header";

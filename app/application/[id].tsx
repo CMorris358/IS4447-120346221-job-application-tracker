@@ -1,4 +1,5 @@
 // detail screen for one application
+// tutorial 25/03 and 11/03
 // reads the id from the route params then finds that application in context
 // edit button navigates to the edit screen remove deletes and goes back
 // uses screenheader and infotag for consistency with the list screen

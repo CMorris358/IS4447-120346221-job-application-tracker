@@ -4,6 +4,7 @@
 // accessibility labels added to every interactive element
 // now uses infotag for category and date
 // added category colour by matching application category to categories table
+// based on 04/03/2026 tutorial
 import InfoTag from "@/components/ui/info-tag";
 import { useRouter } from "expo-router";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";

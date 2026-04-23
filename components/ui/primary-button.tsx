@@ -1,4 +1,5 @@
 // reusable button with variants primary secondary and danger
+// utilised tutorial 11/02 and 04/03
 // accessibility label passed through to screen readers
 // pressed state dims opacity for visual feedback
 import { Pressable, StyleSheet, Text } from "react-native";

@@ -1,4 +1,4 @@
-// got from 0304 tutorial step 2
+// 03/04 tutorial
 // simplified down to a single tab for applications
 import { Tabs } from "expo-router";
 

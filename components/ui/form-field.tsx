@@ -1,6 +1,7 @@
 // reusable form field with a visible label and shared styling
 // accessibility label comes from the label prop so screen readers announce it
 // placeholder falls back to the label if not passed in
+// tutorial 18/02
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props = {

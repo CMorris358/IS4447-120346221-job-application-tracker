@@ -1,7 +1,7 @@
 // insights screen
 // grouping applications by date and showing count per day
-// added toggle for daily weekly monthly using same logic
-// daily shows full data weekly and monthly use recent ranges
+// fixed bug where weekly and monthly views did not change
+// now weekly shows last 7 days and monthly shows last 30 days from today
 // horizontal scroll added so chart scales with number of data points
 
 import { useRouter } from "expo-router";
@@ -33,7 +33,7 @@ export default function Insights() {
     new Set(applications.map((a) => a.date)),
   ).sort();
 
-  // build continuous date range
+  // build continuous date range for daily view
   const fullDates: string[] = [];
 
   if (uniqueDates.length > 0) {
@@ -61,16 +61,32 @@ export default function Insights() {
     data = fullDates.map((date) => counts[date] || 0);
   }
 
-  // weekly last 7 days
+  // weekly last 7 days from today replaced from fulldate slice which only captured application number days
   if (view === "weekly") {
-    const last7 = fullDates.slice(-7);
+    const today = new Date();
+    const last7: string[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      last7.push(d.toISOString().split("T")[0]);
+    }
+
     labels = last7.map((d) => d.slice(5));
     data = last7.map((date) => counts[date] || 0);
   }
 
-  // monthly last 30 days
+  // monthly last 30 days from today from fulldate slice which only captured application number days
   if (view === "monthly") {
-    const last30 = fullDates.slice(-30);
+    const today = new Date();
+    const last30: string[] = [];
+
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      last30.push(d.toISOString().split("T")[0]);
+    }
+
     labels = last30.map((d) => d.slice(5));
     data = last30.map((date) => counts[date] || 0);
   }
@@ -161,7 +177,7 @@ export default function Insights() {
           />
         </ScrollView>
 
-        {/* list reused from chart */}
+        {/* list */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>breakdown</Text>
 

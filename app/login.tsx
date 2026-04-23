@@ -1,6 +1,7 @@
 // login screen
 // handles user login by checking username and password against local db
 // sets user in global context and routes into app on success
+// tutorial 18/02 and 11/03 and 25/03
 
 import { db } from "@/db/client";
 import { users } from "@/db/schema";

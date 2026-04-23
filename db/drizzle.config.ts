@@ -1,3 +1,5 @@
+//Tutorial 11/03
+
 import type { Config } from "drizzle-kit";
 
 export default {

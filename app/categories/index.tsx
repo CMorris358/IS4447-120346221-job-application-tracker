@@ -1,5 +1,6 @@
 // categories list screen shows every category with its colour dot
 // tapping add goes to the add screen tapping a category goes to its edit screen
+// tutorial 04/03 and 25/03
 import PrimaryButton from "@/components/ui/primary-button";
 import ScreenHeader from "@/components/ui/screen-header";
 import { useRouter } from "expo-router";

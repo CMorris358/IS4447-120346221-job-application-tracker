@@ -2,6 +2,7 @@
 // seeds the db on first launch then loads all rows into context
 // targets categories and status logs all live in this provider
 // login user state added so auth can be checked across the app
+// tutorial 03/04 and 11/03
 import { db } from "@/db/client";
 import {
   applications as applicationsTable,
