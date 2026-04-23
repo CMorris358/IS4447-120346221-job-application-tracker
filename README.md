@@ -3,7 +3,7 @@
 ## Links
 
 - GitHub: https://github.com/CMorris358/IS4447-120346221-job-application-tracker.git
-- Expo: https://expo.dev/preview/update?message=Final+submission&updateRuntimeVersion=1.0.0&createdAt=2026-04-22T13%3A31%3A38.416Z&slug=exp&projectId=b8aa88fa-89da-4f01-9211-d0b97ee72d45&group=2ef16d40-d838-4b51-9358-e0748021fbd6
+- Expo: https://expo.dev/preview/update?message=Actual+Final+submission+had+to+fix+date+bug+on+insights+screen&updateRuntimeVersion=1.0.0&createdAt=2026-04-23T12%3A20%3A59.520Z&slug=exp&projectId=b8aa88fa-89da-4f01-9211-d0b97ee72d45&group=16a4992f-8a96-4930-bbec-bf7339a2b87c
 
 ## Description
 
@@ -34,8 +34,6 @@ This project is a mobile job application tracker built using React Native, Expo 
 2. Run `npm install`
 3. Start the app with `npx expo start`
 4. Open using Expo Go on your phone
-5. Login
-6. Login Credentials are username: demo password: demo
 
 ## Testing
 
