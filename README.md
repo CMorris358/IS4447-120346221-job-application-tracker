@@ -34,6 +34,8 @@ This project is a mobile job application tracker built using React Native, Expo 
 2. Run `npm install`
 3. Start the app with `npx expo start`
 4. Open using Expo Go on your phone
+5. Login
+6. Login Credentials are username: demo password: demo
 
 ## Testing
 
